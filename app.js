@@ -12,9 +12,7 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 const postsArray = [];
 const app = express();
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
@@ -52,17 +50,21 @@ app.post("/compose", function(req, res) {
 });
 
 app.get("/posts/:postTitle", function(req, res){
-  let check = [];
   let userPostRequest = _.lowerCase(req.params.postTitle);
   //Create an array of posts' title
-  postsArray.forEach(function(element){
-    check.push( _.lowerCase(element.title));
+  postsArray.forEach(function(post){
+    const recordedTitle = _.lowerCase(post.title);
+
+    if ( recordedTitle == userPostRequest){
+    res.render("post", {
+      title: post.title,
+      content: post.content
+    });
+    }
   });
 
 //render respective post as user's requested post
-  if (check.includes(userPostRequest)){
-  res.render("post", {userPostRequest: postsArray[check.indexOf(userPostRequest)]});
-  }
+
 });
 
 
